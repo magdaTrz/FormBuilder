@@ -1,0 +1,16 @@
+{
+  "name": "trzcinska-magdalena",
+  "version": "1.0.0",
+  "description": "Zadanie rekrutacyjne dla firmy software",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.profil-software.com/recruitment-internship-spring-2023/recruitment-task-frontend-internship.git"
+  },
+  "author": "Magdalena Trzcińska",
+  "license": "ISC"
+}
