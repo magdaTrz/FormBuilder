@@ -31,6 +31,8 @@ The user should be able to keep creating sub-inputs with conditions to as many l
 
 The project should store a persistent state for the form objects in the browser storage as the entire app should live on the front-end without a backend.
 
+The goal of this task is only to create a `Form Builder` which can be used to create forms for the end user. The part that generates the end form is **NOT required**.
+
 
 ## Nice to have
 *  Unit tests
