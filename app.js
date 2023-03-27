@@ -1,4 +1,3 @@
-//  get the query
 const form = document.querySelector(".form");
 const inputQuestionTitle = document.querySelector("#question");
 const inputQuestionType = document.querySelector("#type");
@@ -12,6 +11,7 @@ form.addEventListener("keydown", (e) => {
   if (e.keyCode == 13) {
     e.preventDefault();
     const queForm = e.target.closest("form");
+
     const queTitleTarget = queForm.querySelector("#question");
     const queTitle = queTitleTarget.value;
 
@@ -23,21 +23,16 @@ form.addEventListener("keydown", (e) => {
   }
 });
 
-//Add next Question - button
 btnAccept.addEventListener("click", function (event) {
   event.preventDefault();
 
   const newFragment = document.createElement("form");
-  const id = Date.now();
-  newFragment.setAttribute("id", id);
   form.appendChild(newFragment);
 
   addQueTypeElements(newFragment, form);
 });
 
 function createSubQuestion(_form) {
-  console.log("createSubQuestion():", _form);
-
   const subQueSelectTarget = _form.querySelector("#type");
   const subQueSelect = subQueSelectTarget.value;
 
@@ -47,13 +42,14 @@ function createSubQuestion(_form) {
 }
 
 function addFormElements(_answerType, _form) {
-  //   const divFragment = document.createElement("div");
   const formElement = document.createElement("form");
   formElement.setAttribute("class", "subQue");
-  console.log("addFormElements():", _form, formElement);
+
+  const parent_id = _form.getAttribute("id");
+  const sub_id = Date.now() + "sub" + parent_id;
+  formElement.setAttribute("id", sub_id);
 
   if (_answerType == "text" || _answerType == "radio") {
-    console.log("text || radio");
     const conditionLabel = document.createElement("label");
     conditionLabel.setAttribute("for", "condition");
     conditionLabel.textContent = "Condition equals: ";
@@ -67,7 +63,6 @@ function addFormElements(_answerType, _form) {
       formElement.appendChild(conditionInput);
     }
     if (_answerType == "radio") {
-      console.log("radio");
       const selectRadio = document.createElement("select");
       selectRadio.setAttribute("id", "condition");
       selectRadio.setAttribute("name", "typconditione");
@@ -87,7 +82,6 @@ function addFormElements(_answerType, _form) {
   }
 
   if (_answerType == "number") {
-    console.log("number");
     const conditionLabel = document.createElement("label");
     conditionLabel.setAttribute("for", "condition");
     conditionLabel.textContent = "Condition equals: ";
@@ -100,7 +94,6 @@ function addFormElements(_answerType, _form) {
     formElement.appendChild(conditionInput);
   }
 
-  // add the elements to the form
   insertAfter(formElement, _form);
   addQueTypeElements(formElement, _form);
 }
@@ -145,10 +138,12 @@ function addQueTypeElements(_formFragment, _formToInsert) {
   addSubquestionBtn.setAttribute("class", "addSubquestion");
   addSubquestionBtn.addEventListener("click", function () {
     const formT = _formFragment;
-    console.log("addQueTypeElements():", formT);
     createSubQuestion(formT);
   });
   addSubquestionBtn.textContent = "Add Sub-question";
+
+  const id = Date.now();
+  _formFragment.setAttribute("id", id);
 
   // add the elements to the form
   select.appendChild(radioOption);
@@ -168,9 +163,14 @@ function addToStorage(_id, _question, _type) {
     question: _question,
     type: _type,
   };
-  console.log("addToStorage(): " + question);
 
   let questions = JSON.parse(localStorage.getItem("questions")) || [];
-  questions.push(question);
+  const existingQuestion = questions.find((q) => q.id === _id);
+  if (existingQuestion) {
+    existingQuestion.question = _question;
+    existingQuestion.type = _type;
+  } else {
+    questions.push(question);
+  }
   localStorage.setItem("questions", JSON.stringify(questions));
 }
