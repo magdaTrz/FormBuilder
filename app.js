@@ -27,22 +27,19 @@ form.addEventListener("keydown", (e) => {
 btnAccept.addEventListener("click", function (event) {
   event.preventDefault();
 
-  const formFragment = document.createElement("form");
+  const newFragment = document.createElement("form");
   const id = Date.now();
-  formFragment.setAttribute("id", id);
-  form.appendChild(formFragment);
+  newFragment.setAttribute("id", id);
+  form.appendChild(newFragment);
 
-  addQueTypeElements(formFragment);
+  addQueTypeElements(newFragment, form);
 });
 
 function createSubQuestion(_form) {
-  console.log("createSubQuestion", _form);
-  const subQueTitleTarget = _form.querySelector("#question");
-  const subQueTitle = subQueTitleTarget.value;
+  console.log("createSubQuestion():", _form);
 
   const subQueSelectTarget = _form.querySelector("#type");
   const subQueSelect = subQueSelectTarget.value;
-  console.log("createSubQuestion: " + subQueSelect + subQueTitle);
 
   const btnNewSubQue = _form.querySelector(".addSubquestion");
   addFormElements(subQueSelect, _form);
@@ -51,10 +48,9 @@ function createSubQuestion(_form) {
 
 function addFormElements(_answerType, _form) {
   //   const divFragment = document.createElement("div");
-  const formFragment = document.createElement("form");
-  formFragment.classList.add("subQue");
-  console.log(_answerType);
-  //   divFragment.setAttribute("class", "form");
+  const formElement = document.createElement("form");
+  formElement.setAttribute("class", "subQue");
+  console.log("addFormElements():", _form, formElement);
 
   if (_answerType == "text" || _answerType == "radio") {
     console.log("text || radio");
@@ -62,13 +58,13 @@ function addFormElements(_answerType, _form) {
     conditionLabel.setAttribute("for", "condition");
     conditionLabel.textContent = "Condition equals: ";
 
-    formFragment.appendChild(conditionLabel);
+    formElement.appendChild(conditionLabel);
 
     if (_answerType == "text") {
       const conditionInput = document.createElement("input");
       conditionInput.setAttribute("type", "text");
       conditionInput.setAttribute("id", "condition");
-      formFragment.appendChild(conditionInput);
+      formElement.appendChild(conditionInput);
     }
     if (_answerType == "radio") {
       console.log("radio");
@@ -86,12 +82,8 @@ function addFormElements(_answerType, _form) {
 
       selectRadio.appendChild(yesOption);
       selectRadio.appendChild(noOption);
-      formFragment.appendChild(selectRadio);
+      formElement.appendChild(selectRadio);
     }
-
-    // add the elements to the form
-    // form.insertAdjacentElement("afterend", formFragment);
-    // addQueTypeElements(formFragment);
   }
 
   if (_answerType == "number") {
@@ -104,19 +96,20 @@ function addFormElements(_answerType, _form) {
     conditionInput.setAttribute("type", "text");
     conditionInput.setAttribute("id", "condition");
 
-    // // add the elements to the form
-    // form.appendChild(formFragment);
-    formFragment.appendChild(conditionLabel);
-    formFragment.appendChild(conditionInput);
-
-    // addQueTypeElements(formFragment);
+    formElement.appendChild(conditionLabel);
+    formElement.appendChild(conditionInput);
   }
+
   // add the elements to the form
-  _form.insertAdjacentElement("afterend", formFragment);
-  addQueTypeElements(formFragment);
+  insertAfter(formElement, _form);
+  addQueTypeElements(formElement, _form);
 }
 
-function addQueTypeElements(_formFragment) {
+function insertAfter(newNode, referenceNode) {
+  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function addQueTypeElements(_formFragment, _formToInsert) {
   // create the elements for the question
   const questionLabel = document.createElement("label");
   questionLabel.setAttribute("for", "question");
@@ -150,9 +143,10 @@ function addQueTypeElements(_formFragment) {
   // create the elements for the buttons
   const addSubquestionBtn = document.createElement("button");
   addSubquestionBtn.setAttribute("class", "addSubquestion");
-  addSubquestionBtn.addEventListener("click", function (event) {
-    const form = _formFragment;
-    createSubQuestion(form);
+  addSubquestionBtn.addEventListener("click", function () {
+    const formT = _formFragment;
+    console.log("addQueTypeElements():", formT);
+    createSubQuestion(formT);
   });
   addSubquestionBtn.textContent = "Add Sub-question";
 
@@ -160,7 +154,7 @@ function addQueTypeElements(_formFragment) {
   select.appendChild(radioOption);
   select.appendChild(textOption);
   select.appendChild(numberOption);
-  form.appendChild(_formFragment);
+  _formToInsert.appendChild(_formFragment);
   _formFragment.appendChild(questionLabel);
   _formFragment.appendChild(questionInput);
   _formFragment.appendChild(selectLabel);
