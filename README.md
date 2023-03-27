@@ -1,5 +1,5 @@
 
-# Profil Software Recruitment Task
+# Magdalena Trzcińska - Profil Software Recruitment Task
 
 Hi! This is the task in the recruitment process for the position of Intern JS Developer at Profil Software. Read the instructions carefully.  Good luck!
 
